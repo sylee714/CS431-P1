@@ -1,23 +1,30 @@
+/**
+ * 
+ */
 
+/**
+ * @author MingKie
+ *
+ */
 public class ProcessControlBlock {
 	private int ID;
 	private String name;
 	private String user;
 	private int status;
-	private int PC;
+	private int pc;
 	private int sp;
 	private int r0;
 	private int r1;
 	private int r2;
 	private int r3;
-	public ProcessControlBlock(int iD, String name, String user, int status, int pC, int sp, int r0, int r1, int r2,
+	public ProcessControlBlock(int ID, String name, String user, int status, int pc, int sp, int r0, int r1, int r2,
 			int r3) {
 		super();
-		ID = iD;
+		this.ID = ID;
 		this.name = name;
 		this.user = user;
 		this.status = status;
-		PC = pC;
+		this.pc = pc;
 		this.sp = sp;
 		this.r0 = r0;
 		this.r1 = r1;
@@ -27,8 +34,8 @@ public class ProcessControlBlock {
 	public int getID() {
 		return ID;
 	}
-	public void setID(int iD) {
-		ID = iD;
+	public void setID(int ID) {
+		this.ID = ID;
 	}
 	public String getName() {
 		return name;
@@ -48,11 +55,11 @@ public class ProcessControlBlock {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	public int getPC() {
-		return PC;
+	public int getPc() {
+		return pc;
 	}
-	public void setPC(int pC) {
-		PC = pC;
+	public void setPc(int pc) {
+		this.pc = pc;
 	}
 	public int getSp() {
 		return sp;
