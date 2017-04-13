@@ -50,20 +50,58 @@ public class ProgramEngine {
 	}
 	
 	public void fork() {
+		if (size < 100) {
 		currentID = currentID + 1;
 		ProcessControlBlock copyProcess = new ProcessControlBlock(currentID, currentProcess.getName(), 
 				currentProcess.getUser(), READY, currentProcess.getPc(), currentProcess.getSp(), 
 				currentProcess.getR0(), currentProcess.getR1(), currentProcess.getR2(), currentProcess.getR3());
 		table[size] = copyProcess;
 		size = size + 1;
+		} else {
+			System.out.println("Cannot make a copy. Reached the maximum size.");
+		}
 	}
 	
-	public void kill(int ID) {
-		
+	public void kill(int ID) {	
+		if (currentProcess.getID() == ID) {
+			exit();
+		} else {
+			boolean found = false;
+			for (int i = 0; i < size; ++i) {
+				if (table[i].getID() == ID) {
+					if (currentProcess.getName().equals("root") || 
+							currentProcess.getName().equals(table[i].getName())) {
+						delete(i);
+						found = true;
+					} else {
+						System.out.println("No permission to kill the selected process.");
+					}
+				}
+			}
+			if (!found) {
+				System.out.println("Enter a correct PID.");
+			}
+		}
 	}
 	
 	public void execve(String name, String user) {
-		
+		if (currentProcess.getName().equals("root") || (!currentProcess.getName().equals("root") && !user.equals("root"))) {
+			currentProcess.setName(name);
+			currentProcess.setUser(user);
+			currentProcess.setPc(generateRegVal());
+			currentProcess.setSp(generateRegVal());
+			currentProcess.setR0(generateRegVal());
+			currentProcess.setR1(generateRegVal());
+			currentProcess.setR2(generateRegVal());
+			currentProcess.setR3(generateRegVal());
+			for (int i = 0; i < size; ++i) {
+				if (currentProcess.getID() == table[i].getID()) {
+					table[i] = currentProcess;
+				}
+			}
+		} else {
+			System.out.println("No permission to switch the program and user name.");
+		}
 	}
 	
 	public void block() {
@@ -87,15 +125,15 @@ public class ProgramEngine {
 	}
 	
 	public void exit() {
-		int PID = currentProcess.getID();
+		int ID = currentProcess.getID();
 		int index = 0;
 		for(int i = 0; i < size; ++i) {
-			if(table[i].getID() == PID) {
+			if(table[i].getID() == ID) {
 				table[i] = null;
 				index = i;
 			}
 		}
-		shiftLeft(index);
+		delete(index);
 		randSelect();
 	}
 	
@@ -151,7 +189,7 @@ public class ProgramEngine {
 		}
 	}
 	
-	public void shiftLeft(int index) {
+	public void delete(int index) {
 		for (int i = index; i < size; ++i) {
 			if (i == size - 1) {
 				table[i] = null;
